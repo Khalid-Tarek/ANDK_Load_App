@@ -60,6 +60,12 @@
         android:layout_margin="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:myBackground="@color/colorPrimary"
+        app:loadingCircleColor="@color/colorAccent"
+        app:enableLoadingBar="true"
+        app:enableLoadingCircle="true"
+        app:downloadString="@string/stringDownload"
+        app:loadingString="@string/loadingString"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

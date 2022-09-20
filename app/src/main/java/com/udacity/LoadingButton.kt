@@ -10,6 +10,7 @@ import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.LinearInterpolator
+import androidx.core.content.withStyledAttributes
 import kotlin.properties.Delegates
 
 private const val TAG = "LoadingButton"
@@ -19,6 +20,14 @@ class LoadingButton @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr) {
     private var widthSize = 0
     private var heightSize = 0
+    private var roundFactor = 50f
+
+    private var circleEnabled by Delegates.notNull<Boolean>()
+    private var barEnabled by Delegates.notNull<Boolean>()
+    private var myBackgroundColor by Delegates.notNull<Int>()
+    private var loadingCircleColor by Delegates.notNull<Int>()
+    private lateinit var downloadString: String
+    private lateinit var loadingString: String
 
     private val rect by lazy {
         RectF(
@@ -69,6 +78,17 @@ class LoadingButton @JvmOverloads constructor(
     }
 
     init {
+
+        context.withStyledAttributes(attrs, R.styleable.LoadingButton) {
+            circleEnabled = getBoolean(R.styleable.LoadingButton_enableLoadingCircle, true)
+            barEnabled = getBoolean(R.styleable.LoadingButton_enableLoadingBar, true)
+            myBackgroundColor = getColor(R.styleable.LoadingButton_myBackground, Color.CYAN)
+            loadingCircleColor = getColor(R.styleable.LoadingButton_loadingCircleColor, Color.YELLOW)
+            downloadString = getString(R.styleable.LoadingButton_downloadString) ?: "Download"
+            loadingString = getString(R.styleable.LoadingButton_loadingString) ?: "We are Loading"
+
+        }
+
         isClickable = true
         contentDescription = context.getString(R.string.stringCustomButtonDesc)
     }
@@ -77,30 +97,36 @@ class LoadingButton @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
 
+        drawBackground(canvas)
         when (buttonState) {
-            ButtonState.Completed -> {
-                setBackgroundColor(Color.CYAN)
-                write(canvas, "Download")
-            }
+            ButtonState.Completed -> write(canvas, downloadString)
             ButtonState.Loading -> {
-                drawProgressBar(canvas)
-                drawProgressCircle(canvas)
-                write(canvas, "We are Loading")
+                if(barEnabled) drawProgressBar(canvas)
+                if(circleEnabled) drawProgressCircle(canvas)
+                write(canvas, loadingString)
             }
             ButtonState.Clicked -> {}
         }
     }
 
+    private fun drawBackground(canvas: Canvas?) {
+        paint.color = myBackgroundColor
+        canvas?.drawRoundRect(
+            0f, 0f,
+            width.toFloat(), height.toFloat(), roundFactor, roundFactor, paint
+        )
+    }
+
     private fun drawProgressBar(canvas: Canvas?) {
         paint.color = Color.argb(50, 0, 0, 0)
-        canvas?.drawRect(
-            0f, 0f,
-            width * progress, height.toFloat(), paint
+        canvas?.drawRoundRect(
+            (width / 2f) - (width / 2f * progress), 0f,
+            (width / 2f) + (width / 2f * progress), height.toFloat(), roundFactor, roundFactor, paint
         )
     }
 
     private fun drawProgressCircle(canvas: Canvas?) {
-        paint.color = Color.YELLOW
+        paint.color = loadingCircleColor
         canvas?.drawArc(
             rect,
             0f, progress * 360, true, paint
@@ -109,7 +135,7 @@ class LoadingButton @JvmOverloads constructor(
 
     private fun write(canvas: Canvas?, string: String) {
         paint.color = Color.BLACK
-        canvas?.drawText(string, width / 2f, (height / 2f), paint)
+        canvas?.drawText(string, width / 2f, (height / 2f) + 15f, paint)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
