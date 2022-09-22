@@ -13,6 +13,7 @@ const val REQUEST_CODE = 0
 fun NotificationManager.sendNotification(messageBody: String, applicationContext: Context, bundle: Bundle?) {
 
     val contentIntent = Intent(applicationContext, SeeChangesReceiver::class.java)
+    contentIntent.putExtra("bundle", bundle)
     val contentPendingIntent = PendingIntent.getBroadcast(
         applicationContext,
         REQUEST_CODE,

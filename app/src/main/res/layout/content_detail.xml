@@ -8,4 +8,64 @@
     tools:context=".DetailActivity"
     tools:showIn="@layout/activity_detail">
 
+    <TextView
+        android:id="@+id/fileNameLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:labelFor="@id/fileName"
+        android:text="@string/stringFileNameLabel"
+        android:textSize="@dimen/dimenLabelTextSize"
+        app:layout_constraintBottom_toBottomOf="@+id/fileName"
+        app:layout_constraintEnd_toStartOf="@id/fileName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/fileName" />
+
+    <TextView
+        android:id="@+id/fileName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimenMediumMargin"
+        android:maxWidth="200dp"
+        android:textSize="@dimen/dimenFileDetailsTextSize"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/fileNameLabel"
+        app:layout_constraintTop_toTopOf="parent"
+
+        tools:text="@string/stringRetrofit" />
+
+    <TextView
+        android:id="@+id/statusLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:labelFor="@id/status"
+        android:text="@string/stringStatusLabel"
+        android:textSize="@dimen/dimenLabelTextSize"
+        app:layout_constraintBottom_toBottomOf="@+id/status"
+        app:layout_constraintEnd_toEndOf="@+id/fileNameLabel"
+        app:layout_constraintTop_toTopOf="@+id/status" />
+
+    <TextView
+        android:id="@+id/status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimenMediumMargin"
+        android:maxWidth="200dp"
+        android:textSize="@dimen/dimenFileDetailsTextSize"
+        app:layout_constraintStart_toStartOf="@+id/fileName"
+        app:layout_constraintTop_toBottomOf="@id/fileName"
+        tools:text="Failure"
+        tools:textColor="@android:color/holo_red_light"/>
+
+    <Button
+        android:id="@+id/okButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/colorAccent"
+        android:text="@string/stringOkButton"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="@dimen/dimenMediumMargin"
+        android:textSize="@dimen/dimenLabelTextSize"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

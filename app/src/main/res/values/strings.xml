@@ -19,4 +19,7 @@
     <string name="stringCustomButtonDesc">Custom Button</string>
     <string name="stringDownload">Download Selected</string>
     <string name="loadingString">Downloading Now</string>
+    <string name="stringFileNameLabel">File Name:</string>
+    <string name="stringStatusLabel">Status:</string>
+    <string name="stringOkButton">OK</string>
 </resources>

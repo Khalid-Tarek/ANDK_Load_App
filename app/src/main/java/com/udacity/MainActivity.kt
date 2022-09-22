@@ -9,25 +9,19 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.database.Cursor
-import android.database.DatabaseUtils
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.RadioButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
-import androidx.core.database.getIntOrNull
-import androidx.core.database.getStringOrNull
 import androidx.core.os.bundleOf
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
-import java.lang.Exception
-import java.util.*
 
 private const val TAG = "MainActivity"
 
@@ -64,7 +58,7 @@ class MainActivity : AppCompatActivity() {
         )
 
         custom_button.setOnClickListener {
-            if(URL == "")
+            if (URL == "")
                 Toast.makeText(this, "Please choose an option", Toast.LENGTH_SHORT).show()
             else
                 download()
@@ -73,29 +67,38 @@ class MainActivity : AppCompatActivity() {
 
     private val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-           val c = downloadManager.query(DownloadManager.Query().setFilterById(downloadID))
+            val c = downloadManager.query(DownloadManager.Query().setFilterById(downloadID))
 
             c.moveToNext()
-            val bundle = bundleOf(
-                "status" to downloadTitle,
-                "title" to c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE))
-            )
+            val bundle = getMyBundle(c)
             c.close()
 
-            notificationManager.sendNotification("Download Complete! id: $downloadID", applicationContext, bundle)
+            notificationManager.sendNotification(
+                "Download Complete! id: $downloadID",
+                applicationContext,
+                bundle
+            )
         }
     }
 
-    private fun getStatusString(status: Int) : String {
-        return when(status){
-            DownloadManager.STATUS_FAILED -> "Failed"
-            DownloadManager.STATUS_PAUSED -> "Paused"
-            DownloadManager.STATUS_PENDING -> "Pending"
-            DownloadManager.STATUS_RUNNING -> "Running"
-            DownloadManager.STATUS_SUCCESSFUL -> "Successful"
-            else -> "Unknown"
+    private fun getMyBundle(c: Cursor): Bundle {
+
+        val (statusString, color) = when (c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS))) {
+            DownloadManager.STATUS_FAILED -> "Failure" to Color.RED
+            DownloadManager.STATUS_PAUSED -> "Paused" to Color.BLUE
+            DownloadManager.STATUS_PENDING -> "Pending" to Color.YELLOW
+            DownloadManager.STATUS_RUNNING -> "Running" to Color.CYAN
+            DownloadManager.STATUS_SUCCESSFUL -> "Successful" to Color.GREEN
+            else -> "Unknown" to Color.GRAY
         }
+
+        return bundleOf(
+            "status" to statusString,
+            "color" to color,
+            "title" to downloadTitle
+        )
     }
+
 
     private fun download() {
         custom_button.buttonState = ButtonState.Loading
@@ -129,16 +132,18 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+
     fun onRadioButtonClicked(view: View) {
-        if(view is RadioButton){
-            if(view.isChecked){
-                when(view.id){
+        if (view is RadioButton) {
+            if (view.isChecked) {
+                when (view.id) {
                     R.id.radioGlide -> {
                         URL = "https://github.com/bumptech/glide"
                         downloadTitle = applicationContext.getString(R.string.stringGlide)
                     }
                     R.id.radioRepository -> {
-                        URL = "https://github.com/udacity/nd940-c3-advanced-android-programming-project-starter"
+                        URL =
+                            "https://github.com/udacity/nd940-c3-advanced-android-programming-project-starter"
                         downloadTitle = applicationContext.getString(R.string.stringRepository)
                     }
                     R.id.radioRetrofit -> {
@@ -149,5 +154,4 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
 }

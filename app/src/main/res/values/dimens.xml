@@ -3,4 +3,7 @@
 
     <dimen name="default_text_size">20sp</dimen>
     <dimen name="dimenSmallMargin">12dp</dimen>
+    <dimen name="dimenMediumMargin">24dp</dimen>
+    <dimen name="dimenLabelTextSize">22sp</dimen>
+    <dimen name="dimenFileDetailsTextSize">18sp</dimen>
 </resources>
