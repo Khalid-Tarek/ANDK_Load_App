@@ -22,4 +22,5 @@
     <string name="stringFileNameLabel">File Name:</string>
     <string name="stringStatusLabel">Status:</string>
     <string name="stringOkButton">OK</string>
+    <string name="stringMotionLayoutInstructions">Please click on the Image to preview the MotionLayout Capabilities</string>
 </resources>
